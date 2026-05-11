@@ -1,16 +1,10 @@
-const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 
-const connectDB = async () => {
-  try {
-    await mongoose.connect(process.env.MONGO_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true
-    });
-    console.log('MongoDB Connected...');
-  } catch (err) {
-    console.error(err.message);
-    process.exit(1);
-  }
+exports.hashPassword = async (password) => {
+  const salt = await bcrypt.genSalt(10);
+  return await bcrypt.hash(password, salt);
 };
 
-module.exports = connectDB;
+exports.comparePassword = async (password, hashed) => {
+  return await bcrypt.compare(password, hashed);
+};
