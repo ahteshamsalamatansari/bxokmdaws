@@ -1,14 +1,10 @@
-const express = require('express');
-const router = express.Router();
-const { check, validationResult } = require('express-validator');
+const mongoose = require('mongoose');
 
-router.post('/login', [
-  check('email', 'Please include a valid email').isEmail(),
-  check('password', 'Password is required').exists()
-], (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
-  res.json({ msg: 'Logged in successfully' });
+const UserSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  date: { type: Date, default: Date.now }
 });
 
-module.exports = router;
+module.exports = mongoose.model('user', UserSchema);
