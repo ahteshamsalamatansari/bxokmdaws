@@ -1,9 +1,16 @@
-const express = require('express');
-const app = express();
+const mongoose = require('mongoose');
 
-app.use(express.json());
+const connectDB = async () => {
+  try {
+    await mongoose.connect(process.env.MONGO_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true
+    });
+    console.log('MongoDB Connected...');
+  } catch (err) {
+    console.error(err.message);
+    process.exit(1);
+  }
+};
 
-app.get('/', (req, res) => res.send('API Running'));
-
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+module.exports = connectDB;
