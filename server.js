@@ -1,7 +1,19 @@
 const express = require('express');
+const dotenv = require('dotenv');
+const connectDB = require('./config/db');
+
+// Load env vars
+dotenv.config();
+
+// Connect to database
+connectDB();
+
 const app = express();
 
 app.use(express.json());
+
+// Mount routers
+app.use('/api/auth', require('./routes/auth'));
 
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'UP', timestamp: new Date() });
