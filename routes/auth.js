@@ -1,8 +1,7 @@
 const express = require('express');
+const { register } = require('../controllers/authController');
 const router = express.Router();
 
-router.post('/register', (req, res) => {
-  res.status(501).json({ msg: 'Not implemented' });
-});
+router.post('/register', register);
 
 module.exports = router;
