@@ -1,8 +1,9 @@
 const User = require('../models/User');
 
-// @desc    Register a new user
-// @route   POST /api/auth/register
-// @access  Public
 exports.register = async (req, res, next) => {
-  res.status(200).json({ success: true, data: 'Register stub' });
+  const { username, email, password } = req.body;
+  if (!username || !email || !password) {
+    return res.status(400).json({ success: false, error: 'Please provide all details' });
+  }
+  res.status(200).json({ success: true, data: 'Validation completed' });
 };
