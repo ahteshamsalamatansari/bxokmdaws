@@ -1,6 +1,7 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const connectDB = require('./config/db');
+const errorHandler = require('./middleware/error');
 
 dotenv.config();
 connectDB();
@@ -8,9 +9,10 @@ connectDB();
 const app = express();
 app.use(express.json());
 
-// Mount routers
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/posts', require('./routes/posts'));
+
+app.use(errorHandler);
 
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'UP', timestamp: new Date() });
