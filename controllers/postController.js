@@ -9,16 +9,26 @@ exports.getPosts = async (req, res, next) => {
   }
 };
 
-// @desc    Create new post
-// @route   POST /api/posts
-// @access  Private
 exports.createPost = async (req, res, next) => {
   try {
-    // Add user ID to request body
     req.body.user = req.user.id;
-
     const post = await Post.create(req.body);
     res.status(201).json({ success: true, data: post });
+  } catch (err) {
+    res.status(400).json({ success: false, error: err.message });
+  }
+};
+
+// @desc    Get single post
+// @route   GET /api/posts/:id
+// @access  Public
+exports.getPost = async (req, res, next) => {
+  try {
+    const post = await Post.findById(req.params.id).populate('user', 'username email');
+    if (!post) {
+      return res.status(404).json({ success: false, error: 'Post not found' });
+    }
+    res.status(200).json({ success: true, data: post });
   } catch (err) {
     res.status(400).json({ success: false, error: err.message });
   }
