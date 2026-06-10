@@ -31,27 +31,36 @@ exports.getPost = async (req, res, next) => {
   }
 };
 
-// @desc    Update post
-// @route   PUT /api/posts/:id
-// @access  Private
 exports.updatePost = async (req, res, next) => {
   try {
     let post = await Post.findById(req.params.id);
+    if (!post) return res.status(404).json({ success: false, error: 'Post not found' });
+    if (post.user.toString() !== req.user.id) {
+      return res.status(401).json({ success: false, error: 'Not authorized' });
+    }
+    post = await Post.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
+    res.status(200).json({ success: true, data: post });
+  } catch (err) {
+    res.status(400).json({ success: false, error: err.message });
+  }
+};
+
+// @desc    Delete post
+// @route   DELETE /api/posts/:id
+// @access  Private
+exports.deletePost = async (req, res, next) => {
+  try {
+    const post = await Post.findById(req.params.id);
     if (!post) {
       return res.status(404).json({ success: false, error: 'Post not found' });
     }
 
-    // Make sure user is owner
     if (post.user.toString() !== req.user.id) {
-      return res.status(401).json({ success: false, error: 'Not authorized to update this post' });
+      return res.status(401).json({ success: false, error: 'Not authorized' });
     }
 
-    post = await Post.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-      runValidators: true
-    });
-
-    res.status(200).json({ success: true, data: post });
+    await post.deleteOne();
+    res.status(200).json({ success: true, data: {} });
   } catch (err) {
     res.status(400).json({ success: false, error: err.message });
   }
