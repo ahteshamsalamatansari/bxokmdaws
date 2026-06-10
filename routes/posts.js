@@ -1,5 +1,5 @@
 const express = require('express');
-const { getPosts, createPost, getPost } = require('../controllers/postController');
+const { getPosts, createPost, getPost, updatePost, deletePost } = require('../controllers/postController');
 const { protect } = require('../middleware/auth');
 const router = express.Router();
 
@@ -8,6 +8,8 @@ router.route('/')
   .post(protect, createPost);
 
 router.route('/:id')
-  .get(getPost);
+  .get(getPost)
+  .put(protect, updatePost)
+  .delete(protect, deletePost);
 
 module.exports = router;
