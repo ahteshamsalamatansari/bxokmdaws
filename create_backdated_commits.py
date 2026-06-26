@@ -47,6 +47,11 @@ def main():
         action="store_true", 
         help="Include today in the days count (default: starts from yesterday and goes back)"
     )
+    parser.add_argument(
+        "--force",
+        action="store_true",
+        help="Ignore uncommitted changes in the repository and proceed anyway"
+    )
     args = parser.parse_args()
 
     # Resolve absolute repository path
@@ -60,8 +65,8 @@ def main():
         sys.exit(1)
 
     # 2. Check repository status
-    if repo.is_dirty(untracked_files=True):
-        print("Error: The repository has uncommitted changes. Please clean, stash, or commit them first.")
+    if not args.force and repo.is_dirty(untracked_files=True):
+        print("Error: The repository has uncommitted changes. Please clean, stash, or commit them first (or run with --force).")
         sys.exit(1)
 
     # 3. Detect co-author trailer (copied from active commits for contribution graph persistence)
