@@ -69,3 +69,25 @@ Short answer: NO!
 Detailed answer:
 I asked this question on [stackoverflow](https://stackoverflow.com/questions/66496319/is-it-against-github-tos-to-make-commits-daily-with-gitpython), and any other question you have is answered there!
 
+## Backdated Commits Script
+
+If you need to fill in gaps for the previous 7 days (or any custom number of days), you can use the `create_backdated_commits.py` script. It generates between 150 and 180 commits per day (or a custom range) for past dates.
+
+### How to use:
+
+1. **Run the script locally** (defaults to generating 150-180 commits per day for the previous 7 days, excluding today):
+   ```bash
+   python create_backdated_commits.py
+   ```
+
+2. **Run with custom options**:
+   - Change the number of days: `--days 10`
+   - Set custom commit ranges: `--min-commits 100 --max-commits 120`
+   - Include today in the days count: `--include-today`
+   - Automatically push to remote origin after completion: `--push`
+   - Use a specific repository path: `--repo-path /path/to/repo`
+
+   Example:
+   ```bash
+   python create_backdated_commits.py --days 7 --min-commits 150 --max-commits 180 --push
+   ```
